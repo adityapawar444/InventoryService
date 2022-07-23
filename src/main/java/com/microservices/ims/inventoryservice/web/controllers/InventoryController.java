@@ -30,7 +30,7 @@ public class InventoryController {
 	}
 	
 	@PostMapping("/{inventoryId}")
-	public ResponseEntity updateInventory(@PathVariable("inventoryId") UUID inventoryId, @RequestBody InventoryDto updatedInventory) {
+	public ResponseEntity updateInventoryById(@PathVariable("inventoryId") UUID inventoryId, @RequestBody InventoryDto updatedInventory) {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
