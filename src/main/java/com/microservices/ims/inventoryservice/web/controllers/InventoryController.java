@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +25,13 @@ public class InventoryController {
 	}
 	
 	@PostMapping
-	public ResponseEntity createNewInventory(@RequestBody InventoryDto newInventory){
+	public ResponseEntity createNewInventory(@RequestBody @Validated InventoryDto newInventory){
 		//TODO: impl
 		return new ResponseEntity(HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/{inventoryId}")
-	public ResponseEntity updateInventoryById(@PathVariable("inventoryId") UUID inventoryId, @RequestBody InventoryDto updatedInventory) {
+	public ResponseEntity updateInventoryById(@PathVariable("inventoryId") UUID inventoryId, @RequestBody @Validated InventoryDto updatedInventory) {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 

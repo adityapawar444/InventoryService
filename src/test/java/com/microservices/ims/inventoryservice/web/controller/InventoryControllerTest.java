@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.ims.inventoryservice.web.InventoryDto;
+import com.microservices.ims.inventoryservice.web.constants.InventoryGroup;
 import com.microservices.ims.inventoryservice.web.controllers.InventoryController;
 
 @WebMvcTest(InventoryController.class) // enables config relevant only for MVC tests
@@ -34,10 +36,21 @@ public class InventoryControllerTest {
 	}
 	
 	@Test
-	void createNewInventory() throws Exception {
+	void createNewInventoryWithBadRequest() throws Exception {
 		
 		InventoryDto newInventory = InventoryDto.builder().build();
-		newInventory.setInventoryName("");
+		String newInventoryJSON = objectMapper.writeValueAsString(newInventory);
+		
+		mockMvc.perform(post("/api/v1/inventory")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(newInventoryJSON))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void createNewInventory() throws Exception {
+		
+		InventoryDto newInventory = getInventoryOject();
 		String newInventoryJSON = objectMapper.writeValueAsString(newInventory);
 		
 		mockMvc.perform(post("/api/v1/inventory")
@@ -47,9 +60,21 @@ public class InventoryControllerTest {
 	}
 	
 	@Test
-	void updateInventorybyId() throws Exception {
+	void updateInventorybyIdWithBadRequest() throws Exception {
 		
 		InventoryDto updatedInventory = InventoryDto.builder().build();
+		String updatedInventoryJSON = objectMapper.writeValueAsString(updatedInventory);
+		
+		mockMvc.perform(post("/api/v1/inventory/" + UUID.randomUUID().toString())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(updatedInventoryJSON))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void updateInventorybyId() throws Exception {
+		
+		InventoryDto updatedInventory = getInventoryOject();;
 		String updatedInventoryJSON = objectMapper.writeValueAsString(updatedInventory);
 		
 		mockMvc.perform(post("/api/v1/inventory/" + UUID.randomUUID().toString())
@@ -58,4 +83,12 @@ public class InventoryControllerTest {
 				.andExpect(status().isNoContent());
 	}
 	
+	
+	private InventoryDto getInventoryOject() {
+		return InventoryDto.builder()
+				.inventoryName("Test")
+				.inventoryGroup(InventoryGroup.GRAINS)
+				.quantity(2.0)
+				.perUnitPrice(new BigDecimal(2.0)).build();
+	}
 }
