@@ -37,6 +37,7 @@ public class InventoryControllerTest {
 	void createNewInventory() throws Exception {
 		
 		InventoryDto newInventory = InventoryDto.builder().build();
+		newInventory.setInventoryName("");
 		String newInventoryJSON = objectMapper.writeValueAsString(newInventory);
 		
 		mockMvc.perform(post("/api/v1/inventory")
